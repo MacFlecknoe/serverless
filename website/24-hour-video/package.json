@@ -1,0 +1,14 @@
+{
+  "name": "24-hour-video",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "start": "ws",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "local-web-server": "^2.5.6"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "name": "set-permissions",
+  "version": "1.0.0",
+  "description": "Set Permissions Function",
+  "main": "SetPermissionsHandler.js",
+  "scripts": {
+    "test": "run-local-lambda --file SetPermissionsHandler.js --event tests/event.json",
+    "deploy": "aws lambda update-function-code --function-name arn:aws:lambda:us-east-1:587457065590:function:set-permissions --zip-file fileb://Lambda-Deployment.zip",
+    "predeploy": "zip -r Lambda-Deployment.zip * -x *.zip *.log *.njsproj"
+  },
+  "dependencies": {
+    "aws-sdk": "latest",
+    "run-local-lambda": "^1.1.1",
+    "save-dev": "^2.0.0"
+  },
+  "author": "",
+  "license": "ISC",
+  "directories": {
+    "test": "tests"
+  }
+}

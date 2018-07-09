@@ -1,0 +1,10 @@
+logs
+*.log
+.*/
+build/
+.*
+.npm
+node_modules/
+obj/
+*.zip
+

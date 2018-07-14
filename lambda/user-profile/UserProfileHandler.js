@@ -28,12 +28,12 @@ exports.handler = function(event, context, callback) {
 			json: true,
 			body: body			
 		};
-		request(options, function(err, response, body) {
+		request(options, function(error, response, body) {
 			if(!err && response.statusCode === 200) {
 				callback(null, body);
 			} else {
 				callback(error);
 			}
-		}
+		});
 	});
 };

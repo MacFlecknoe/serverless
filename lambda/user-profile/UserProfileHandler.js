@@ -15,7 +15,7 @@ exports.handler = function(event, context, callback) {
 	jwt.verify(token, secretBuffer, function(err, decoded) {
 		
 		if(err) {
-			console.log('Failed jwt validation: ' err, 'auth: ', event.authToken);
+			console.log('Failed jwt validation: ', err, 'auth: ', event.authToken);
 			callback('Authorizatin Failed');
 		} else {
 			var body = {

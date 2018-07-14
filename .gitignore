@@ -7,7 +7,4 @@ build/
 node_modules/
 obj/
 *.zip
-
-lambda/set-permissions/package-lock.json
-website/24-hour-video/package-lock.json
-lambda/transcode-video/package-lock.json
+*/package-lock.json

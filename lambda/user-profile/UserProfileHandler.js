@@ -5,6 +5,36 @@ var jwt = require('jsonwebtoken');
 var request = require('request');
 var s3 = new AWS.S3();
 
+var verifyToken = function (token, secretOrPublicKey, verifyOptions, callback) {
+
+    jwt.verify(token, secretOrPublicKey, verifyOptions, function (err, decoded) {
+
+        if (err) {
+            console.log('Failed jwt validation: ', err, 'auth: ', event.authToken);
+            callback('Authorization Failed');
+        } else {
+            var headers = {
+                'Authorization': "Bearer " + token
+            };
+            var options = {
+                url: 'https://' + process.env.DOMAIN + '/userinfo',
+                method: 'GET',
+                json: true,
+                headers: headers
+            };
+            request(options, function (error, response, body) {
+                if (!error && response.statusCode === 200) {
+                    callback(null, body);
+                } else {
+                    console.log("tokeninfoerror: ", error);
+                    console.log("response.statusCode: ", response.statusCode);
+                    callback(error);
+                }
+            });
+        }
+    });
+};
+
 exports.handler = function (event, context, callback) {
 
     if (!event.authToken) {
@@ -16,6 +46,7 @@ exports.handler = function (event, context, callback) {
         Bucket: process.env.PUBLIC_KEY_BUCKET_NAME,
         Key: process.env.PUBLIC_KEY_BUCKET_KEY
     };
+
     if (!process.env.CLIENT_SECRET) {
 
         console.log("grabbing public key from s3");
@@ -27,66 +58,13 @@ exports.handler = function (event, context, callback) {
                 callback(s3err);
 
             } else {
-
-                jwt.verify(token, new Buffer(data.Body, 'binary'), { algorithm: 'RS256' }, function (err, decoded) {
-
-                    if (err) {
-                        console.log('Failed jwt validation: ', err, 'auth: ', event.authToken);
-                        callback('Authorization Failed');
-                    } else {
-                        var headers = {
-                            'Authorization': "Bearer " + token
-                        };
-                        var options = {
-                            url: 'https://' + process.env.DOMAIN + '/userinfo',
-                            method: 'GET',
-                            json: true,
-                            headers: headers
-                        };
-                        request(options, function (error, response, body) {
-                            if (!error && response.statusCode === 200) {
-                                callback(null, body);
-                            } else {
-                                console.log("tokeninfoerror: ", error);
-								console.log("response.statusCode: ", response.statusCode);
-                                callback(error);
-                            }
-                        });
-                    }
-                });
+                verifyToken(token, new Buffer(data.Body, 'binary'), { algorithm: 'RS256' }, callback);
             }
         });
 
     } else {
-
         console.log("using client secret");
-
-        jwt.verify(token, process.env.CLIENT_SECRET, { algorithm: 'HS256' }, function (err, decoded) {
-
-            if (err) {
-                console.log('Failed jwt validation: ', err, 'auth: ', event.authToken);
-                callback('Authorization Failed');
-            } else {
-                var headers = {
-                    'Authorization': "Bearer " + token
-                };
-                var options = {
-                    url: 'https://' + process.env.DOMAIN + '/userinfo',
-                    method: 'GET',
-                    json: true,
-                    headers: headers
-                };
-                request(options, function (error, response, body) {
-                    if (!error && response.statusCode === 200) {
-                        callback(null, body);
-                    } else {
-                        console.log("tokeninfoerror: ", error);
-                        console.log("response.statusCode: ", response.statusCode);
-                        callback(error);
-                    }
-                });
-            }
-        });
+        verifyToken(token, process.env.CLIENT_SECRET, { algorithm: 'HS256' }, callback);
     }
 };
 

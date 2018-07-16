@@ -5,10 +5,10 @@ var jwt = require('jsonwebtoken');
 var request = require('request');
 var s3 = new AWS.S3();
 
-var generatePolicy = function (principleId, effect, resource) {
+var generatePolicy = function (principalId, effect, resource) {
 
     var authResponse = {};
-    authResponse.principleId = principleId;
+    authResponse.principalId = principalId;
 
     if (effect && resource) {
 
@@ -31,7 +31,7 @@ var authorizeMethod = function (token, secretOrPublicKey, verifyOptions, methodA
 
     jwt.verify(token, secretOrPublicKey, verifyOptions, function (err, decoded) {
         if (err) {
-            console.log('Failed jwt validation: ', err, 'auth: ', token);
+            console.log('Failed jwt validation: ', err, 'token: ', token);
             callback('Authorization Failed');
         } else {
             callback(null, generatePolicy('user', 'allow', methodArn));
@@ -41,11 +41,15 @@ var authorizeMethod = function (token, secretOrPublicKey, verifyOptions, methodA
 
 exports.handler = function (event, context, callback) {
 
-    if (!event.authToken) {
+    console.log('Auth token: ' + event.authorizationToken);
+    console.log('Method ARN: ' + event.methodArn);
+    console.log('Context', context);
+
+    if (!event.authorizationToken) {
         callback('Could not find authToken');
         return;
     }
-    var token = event.authToken.split(' ')[1]; // contains the word Bearer before the token
+    var token = event.authorizationToken.split(' ')[1]; // contains the word Bearer before the token
 
     if (!process.env.CLIENT_SECRET) {
 

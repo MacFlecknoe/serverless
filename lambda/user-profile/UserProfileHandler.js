@@ -10,7 +10,7 @@ var verifyToken = function (token, secretOrPublicKey, verifyOptions, callback) {
     jwt.verify(token, secretOrPublicKey, verifyOptions, function (err, decoded) {
 
         if (err) {
-            console.log('Failed jwt validation: ', err, 'auth: ', event.authToken);
+            console.log('Failed jwt validation: ', err, 'auth: ', token);
             callback('Authorization Failed');
         } else {
             var headers = {

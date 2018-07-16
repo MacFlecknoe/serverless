@@ -9,6 +9,7 @@
     "predeploy": "zip -r Lambda-Deployment.zip * -x *.zip *.log *.njsproj"
   },
   "dependencies": {
+    "aws-sdk": "latest",
     "jsonwebtoken": "^8.3.0",
     "request": "^2.87.0"
   },

@@ -42,15 +42,15 @@ exports.handler = function (event, context, callback) {
         return;
     }
     var token = event.authToken.split(' ')[1]; // contains the word Bearer before the token
-    var params = {
-        Bucket: process.env.PUBLIC_KEY_BUCKET_NAME,
-        Key: process.env.PUBLIC_KEY_BUCKET_KEY
-    };
 
     if (!process.env.CLIENT_SECRET) {
 
         console.log("grabbing public key from s3");
 
+        var params = {
+            Bucket: process.env.PUBLIC_KEY_BUCKET_NAME,
+            Key: process.env.PUBLIC_KEY_BUCKET_KEY
+        };
         s3.getObject(params, function (s3err, data) {
 
             if (s3err) {

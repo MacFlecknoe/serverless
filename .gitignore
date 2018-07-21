@@ -7,10 +7,7 @@ build/
 node_modules/
 obj/
 *.zip
-*/package-lock.json
 *.dll
 lambda/custom-authorizer/package-lock.json
 lambda/get-videos-list/package-lock.json
-lambda/user-profile/package-lock.json
-lambda/user-profile/package-lock.json
 lambda/user-profile/package-lock.json

@@ -8,6 +8,4 @@ node_modules/
 obj/
 *.zip
 *.dll
-lambda/custom-authorizer/package-lock.json
-lambda/get-videos-list/package-lock.json
-lambda/user-profile/package-lock.json
+package-lock.json

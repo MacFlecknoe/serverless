@@ -6,7 +6,7 @@
   "scripts": {
     "precreate": "zip -r Lambda-Deployment.zip * -x *.zip *.log *.njsproj",
     "create": "aws lambda create-function --function-name get-video-list --handler GetVideoListHandler.handler --memory-size 128 --runtime nodejs4.3 --role arn:aws:iam::587457065590:role/lambda-s3-execution-role --timeout 3 --publish --zip-file fileb://Lambda-Deployment.zip",
-    "test": "run-local-lambda --file GetVideoListHandler.js --event tests/event.json",
+    "test": "mocha ./tests/",
     "predeploy": "zip -r Lambda-Deployment.zip * -x *.zip *.log *.njsproj",
     "deploy": "aws lambda update-function-code --function-name arn:aws:lambda:us-east-1:587457065590:function:get-video-list --zip-file fileb://Lambda-Deployment.zip"
   },
@@ -22,6 +22,6 @@
   "license": "ISC",
   "devDependencies": {
     "rewire": "^4.0.1",
-    "sinon": "^6.1.4",
+    "sinon": "^6.1.4"
   }
 }

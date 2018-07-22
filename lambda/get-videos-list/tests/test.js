@@ -19,17 +19,14 @@ var sampleData = {
 
 describe('GetVideoListHandler', function () {
 
-  var listFilesStub;
-  var callbackSpy;
-  var module;
+  var listFilesStub, callbackSpy, module;
 
   describe('#handler', function () {
-    before(function (done) {
+    before(function () {
       listFilesStub = sinon.stub().yields(null, sampleData);
       module = getModule(listFilesStub);  // get rewired module
       callbackSpy = sinon.spy();
       module.handler(null, null, callbackSpy);
-      done();
     });
     it('should run our function once', function () {
       sinon.assert.calledOnce(callbackSpy); //test to ensure spy was called once

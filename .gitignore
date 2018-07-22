@@ -10,3 +10,5 @@ obj/
 *.dll
 package-lock.json
 bin/
+*.njsproj
+*.sln

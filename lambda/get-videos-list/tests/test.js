@@ -36,23 +36,24 @@ describe('GetVideoListHandler', function () {
       sinon.assert.calledOnce(callbackSpy); //test to ensure spy was called once
     });
     it('should have correct results', function () {
+      var body = {
+        'domain': "https://s3.amazonaws.com",
+        'bucket': "serverless-video-transcoded",
+        'files': [
+          {
+            'filename': 'file1.mp4',
+            'eTag': 'eTag1',
+            'size': 0
+          }, 
+          {
+            'filename': 'file2.mp4',
+            'eTag': 'eTag2',
+            'size': 0
+          }
+        ]
+      }
       var result = {
-        body: {
-          'domain': "https://s3.amazonaws.com",
-          'bucket': "serverless-video-transcoded",
-          'files': [
-            {
-              'filename': 'file1.mp4',
-              'eTag': 'eTag1',
-              'size': 0
-            }, 
-            {
-              'filename': 'file2.mp4',
-              'eTag': 'eTag2',
-              'size': 0
-            }
-          ]
-        },
+        'body': JSON.stringify(body),
         'headers': { 'Access-Control-Allow-Origin': '*' },
         'statusCode': 200
       }

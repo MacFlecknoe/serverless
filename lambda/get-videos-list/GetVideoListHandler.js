@@ -70,7 +70,7 @@ function createResponse(code, result) {
     var response = {
         'statusCode': code,
         'headers': { 'Access-Control-Allow-Origin': '*' },
-        'body': result
+        'body': JSON.stringify(result)
     }
     return response;
 }

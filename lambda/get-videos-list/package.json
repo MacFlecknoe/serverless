@@ -12,7 +12,6 @@
   },
   "dependencies": {
     "@macflecknoe/email": "^1.0.4",
-    "@sinonjs/formatio": "^2.0.0",
     "async": "^2.6.1",
     "aws-sdk": "latest",
     "run-local-lambda": "^1.1.1",
@@ -22,6 +21,7 @@
   "license": "ISC",
   "devDependencies": {
     "rewire": "^4.0.1",
-    "sinon": "^6.1.4"
+    "sinon": "^6.1.4",
+    "@sinonjs/formatio": "^2.0.0"
   }
 }

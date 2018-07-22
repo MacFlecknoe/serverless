@@ -1,15 +1,7 @@
 'use strict';
 
-var aws = require('aws-sdk');
-aws.config.update({ region: 'us-east-1' });
-
-var chai = require('chai');
 var sinon = require('sinon');
 var rewire = require('rewire');
-chai.use(require('sinon-chai'));
-
-var expect = chai.expect;
-var assert = chai.assert;
 
 process.env.BASE_URL = "https://s3.amazonaws.com";
 process.env.BUCKET = "serverless-video-transcoded";
@@ -26,6 +18,7 @@ var sampleData = {
 }
 
 describe('LamdbaFunction', function () {
+
   var listFilesStub;
   var callbackSpy;
   var module;
@@ -33,15 +26,13 @@ describe('LamdbaFunction', function () {
   describe('#execute', function () {
     before(function (done) {
       listFilesStub = sinon.stub().yields(null, sampleData);
-      callbackSpy = sinon.spy();
       module = getModule(listFilesStub);  // get rewired module
-      module.handler(null, null, function (error, results) { // execute the module
-        callbackSpy.apply(null, arguments);
-        done(); // tell mocha we are finished
-      });
+      callbackSpy = sinon.spy();
+      module.handler(null, null, callbackSpy);
+      done();
     });
     it('should run our function once', function () {
-      expect(callbackSpy).calledOnce; //test to ensure spy was called once
+      sinon.assert.calledOnce(callbackSpy); //test to ensure spy was called once
     });
     it('should have correct results', function () {
       var result = {
@@ -56,7 +47,7 @@ describe('LamdbaFunction', function () {
           }
         ]
       };
-      assert.deepEqual(callbackSpy.args, [[null, result]]);
+      sinon.assert.match(callbackSpy.args, [[null, result]]);
     })
   })
 })

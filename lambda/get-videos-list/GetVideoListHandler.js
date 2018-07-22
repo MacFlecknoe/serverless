@@ -69,7 +69,6 @@ exports.handler = function (event, context, callback) {
         if (err) {
             callback(err);
         } else {
-			email.send(['macflecknoe@gmail.com'], 'macflecknoe@gmail.com', 'sucessful lambda call', JSON.stringify(result));
             callback(null, result); // returns list of URLs, base URL and bucket name
         }
     });

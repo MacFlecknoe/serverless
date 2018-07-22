@@ -44,32 +44,53 @@ function getVideoFilesFromBucket(params, next) {
     });
 }
 
-function createFileList(files, next) {
+function createFileList(encoding, files, next) {
     console.log("createFileList:", files);
     logger.log('info', 'createFileList: %s', files);
-    var urls = [];
+    var fileList = [];
     for (var i = 0; i < files.Contents.length; i++) {
         var file = files.Contents[i];
         if (file.Key && file.Key.substr(-3, 3) === 'mp4') { // only grab videos
-            urls.push(file);
+            fileList.push({
+                'filename': file.Key,
+                'eTag': file.ETag.replace(/"/g, ""),
+                'size': file.Size
+            });
         }
     }
     var result = {
-        baseUrl: process.env.BASE_URL,
-        bucket: process.env.BUCKET,
-        urls: urls
+        'domain': process.env.BASE_URL,
+        'bucket': process.env.BUCKET,
+        'files': fileList
     };
     next(null, result);
 }
 
+function createResponse(code, result) {
+    var response = {
+        'statusCode': code,
+        'headers': { 'Access-Control-Allow-Origin': '*' },
+        'body': result
+    }
+    return response;
+}
+
 exports.handler = function (event, context, callback) {
-    console.log("here");
-    logger.log('info', 'here');
-    async.waterfall([createBucketParams, getVideoFilesFromBucket, createFileList], function (err, result) {
+
+    var encoding = null;
+    if (event.queryStringParameters && event.queryStringParameters.encoding) {
+        encoding = decodeURIComponent(event.queryStringParameters.encoding);
+    }
+    console.log("encoding:", encoding);
+    logger.log('info', 'encoding %s', encoding);
+
+    async.waterfall([createBucketParams, getVideoFilesFromBucket, async.apply(createFileList, encoding)], function (err, result) {
         if (err) {
-            callback(err);
+            callback(null, createResponse(500, err));
+        } else if (result.files.length > 0) {
+            callback(null, createResponse(200, result)); // returns list of URLs, base URL and bucket name
         } else {
-            callback(null, result); // returns list of URLs, base URL and bucket name
+            callback(null, createResponse(404, 'No files found'));
         }
     });
 };

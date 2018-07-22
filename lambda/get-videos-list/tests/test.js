@@ -9,10 +9,14 @@ process.env.BUCKET = "serverless-video-transcoded";
 var sampleData = {
   Contents: [{
       Key: 'file1.mp4',
-      bucket: 'my-bucket'
+      Bucket: 'my-bucket',
+      Size: 0,
+      ETag: 'eTag1'
     }, {
       Key: 'file2.mp4',
-      bucket: 'my-bucket'
+      Bucket: 'my-bucket',
+      Size: 0,
+      ETag: 'eTag2'
     }
   ]
 }
@@ -26,24 +30,32 @@ describe('GetVideoListHandler', function () {
       listFilesStub = sinon.stub().yields(null, sampleData);
       module = getModule(listFilesStub);  // get rewired module
       callbackSpy = sinon.spy();
-      module.handler(null, null, callbackSpy);
+      module.handler({}, {}, callbackSpy);
     });
     it('should run our function once', function () {
       sinon.assert.calledOnce(callbackSpy); //test to ensure spy was called once
     });
     it('should have correct results', function () {
       var result = {
-        "baseUrl": "https://s3.amazonaws.com",
-        "bucket": "serverless-video-transcoded",
-        "urls": [ {
-            "Key": sampleData.Contents[0].Key,
-            "bucket": "my-bucket"
-          }, {
-            "Key": sampleData.Contents[1].Key,
-            "bucket": "my-bucket"
-          }
-        ]
-      };
+        body: {
+          'domain': "https://s3.amazonaws.com",
+          'bucket': "serverless-video-transcoded",
+          'files': [
+            {
+              'filename': 'file1.mp4',
+              'eTag': 'eTag1',
+              'size': 0
+            }, 
+            {
+              'filename': 'file2.mp4',
+              'eTag': 'eTag2',
+              'size': 0
+            }
+          ]
+        },
+        'headers': { 'Access-Control-Allow-Origin': '*' },
+        'statusCode': 200
+      }
       sinon.assert.match(callbackSpy.args, [[null, result]]);
     })
   })

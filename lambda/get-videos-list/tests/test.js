@@ -17,13 +17,13 @@ var sampleData = {
   ]
 }
 
-describe('LamdbaFunction', function () {
+describe('GetVideoListHandler', function () {
 
   var listFilesStub;
   var callbackSpy;
   var module;
 
-  describe('#execute', function () {
+  describe('#handler', function () {
     before(function (done) {
       listFilesStub = sinon.stub().yields(null, sampleData);
       module = getModule(listFilesStub);  // get rewired module

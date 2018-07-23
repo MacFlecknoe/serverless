@@ -3,7 +3,6 @@
 var AWS = require('aws-sdk');
 var jwt = require('jsonwebtoken');
 var request = require('request');
-var s3 = new AWS.S3();
 
 var generatePolicy = function (principalId, effect, resource) {
 
@@ -55,16 +54,15 @@ exports.handler = function (event, context, callback) {
 
         console.log("grabbing public key from s3");
 
+        var s3 = new AWS.S3();
         var params = {
             Bucket: process.env.PUBLIC_KEY_BUCKET_NAME,
             Key: process.env.PUBLIC_KEY_BUCKET_KEY
         };
-        s3.getObject(params, function (s3err, data) {
-
-            if (s3err) {
-                console.log(s3err, s3err.stack);
-                callback(s3err);
-
+        s3.getObject(params, function (err, data) {
+            if (err) {
+                console.log(err, err.stack);
+                callback(err);
             } else {
                 authorizeMethod(token, new Buffer(data.Body, 'binary'), { algorithm: 'RS256' }, event.methodArn, callback);
             }

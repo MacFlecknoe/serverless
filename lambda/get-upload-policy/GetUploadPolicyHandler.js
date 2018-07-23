@@ -49,7 +49,7 @@ function generatePolicyDocument(filename, next) {
             },
             {
                 'acl': 'private'
-            }
+            },
             ['starts-with', '$Content-Type', '']
         ]
     };

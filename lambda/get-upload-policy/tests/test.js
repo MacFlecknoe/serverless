@@ -1,11 +1,17 @@
 'use strict';
 
 var sinon = require('sinon');
+var winston = require('winston');
 
-process.env.UPLOAD_BUCKET = "serverless-video-transcoded";
-process.env.UPLOAD_URI = "http://test";
-process.env.SECRET_ACCESS_KEY = "ABCDE";
-process.env.ACCESS_KEY = "1234";
+var logger = new (winston.Logger)({
+    transports: [
+        new (winston.transports.Console)({
+            handleExceptions: false,
+            json: false,
+            level: process.env.NODE_LOGGING_LEVEL || 'info'
+        })
+    ]
+});
 
 describe('GetUploadPolicyHandler', function () {
 
@@ -14,6 +20,13 @@ describe('GetUploadPolicyHandler', function () {
 
     describe('#handler', function () {
         before(function () {
+
+            // should probably rewire this rather than setting them
+            process.env.UPLOAD_BUCKET = "serverless-video-transcoded";
+            process.env.UPLOAD_URI = "http://test";
+            process.env.SECRET_ACCESS_KEY = "ABCDE";
+            process.env.ACCESS_KEY = "1234";
+
             var event = {
                 'queryStringParameters': {
                     'filename': 'test.file'
@@ -25,27 +38,16 @@ describe('GetUploadPolicyHandler', function () {
         it('should run our function once', function () {
             sinon.assert.calledOnce(callbackSpy); //test to ensure spy was called once
         });
-        it('should have correct results', function () {
-            var body = {
-                'signature': "sample",
-                'encoded_policy': "sample",
-                'access_key': "1234",
-                'upload_url': "http://test/serverless-video-transcoded",
-                'key': "sample"
-            }
-            var result = {
-                'body': body,
-                'headers': { 'Access-Control-Allow-Origin': '*' },
-                'statusCode': 200
-            }
-            // some of the results are random so we exclude them from the tests
-            var resultBody = JSON.parse(callbackSpy.args[0][1].body);
-            resultBody.signature = "sample";
-            resultBody.key = "sample";
-            resultBody.encoded_policy = "sample";
-            callbackSpy.args[0][1].body = resultBody;
+        it('policy is properly encoded', function () {
 
-            sinon.assert.match(callbackSpy.args, [[null, result]]);
+            var body = JSON.parse(callbackSpy.args[0][1].body);
+            var encodedPolicy = new Buffer(body.encoded_policy, 'base64');
+            var unencodedPolicy = JSON.parse(encodedPolicy.toString('ascii'));
+
+            logger.log("debug", "unencoded policy: %s", JSON.stringify(unencodedPolicy));
+
+            sinon.assert.match(unencodedPolicy.conditions[2].acl, 'private');
+            sinon.assert.match(unencodedPolicy.conditions[1].bucket, process.env.UPLOAD_BUCKET);
         });
     });
 });

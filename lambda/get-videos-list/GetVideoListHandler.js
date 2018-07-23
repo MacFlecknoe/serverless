@@ -51,8 +51,13 @@ function createFileList(encoding, files, next) {
     for (var i = 0; i < files.Contents.length; i++) {
         var file = files.Contents[i];
         if (file.Key && file.Key.substr(-3, 3) === 'mp4') { // only grab videos
+            var params = {
+                Bucket: process.env.BUCKET,
+                Key: file.Key
+            }
+            var url = s3.getSignedUrl('getObject', params);
             fileList.push({
-                'filename': file.Key,
+                'filename': url,
                 'eTag': file.ETag.replace(/"/g, ""),
                 'size': file.Size
             });

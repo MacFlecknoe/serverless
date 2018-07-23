@@ -4,8 +4,10 @@
   "description": "",
   "main": "GetUploadPolicyHandler.js",
   "scripts": {
+    "precreate": "zip -r Lambda-Deployment.zip * -x *.zip *.log *.njsproj",
+    "create": "aws lambda create-function --function-name get-upload-policy --handler GetUploadPolicyHandler.handler --memory-size 128 --runtime nodejs4.3 --role 'arn:aws:iam::587457065590:role/lambda-s3-execution-role' --timeout 3 --publish --zip-file fileb://Lambda-Deployment.zip",
     "test": "mocha tests/",
-    "deploy": "aws lambda update-function-code --function-name arn:aws:lambda:us-east-1:587457065590:function:user-profile --zip-file fileb://Lambda-Deployment.zip",
+    "deploy": "aws lambda update-function-code --function-name arn:aws:lambda:us-east-1:587457065590:function:get-upload-policy --zip-file fileb://Lambda-Deployment.zip",
     "predeploy": "zip -r Lambda-Deployment.zip * -x *.zip *.log *.njsproj"
   },
   "dependencies": {

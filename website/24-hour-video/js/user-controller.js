@@ -8,7 +8,8 @@
         logoutButton: null,
         profileButton: null,
         profileNameLabel: null,
-        profileImage: null
+        profileImage: null,
+        uploadButton: null
     },
     init: function (config) {
 
@@ -19,17 +20,18 @@
         this.uiElements.profileButton = $('#user-profile');
         this.uiElements.profileNameLabel = $('#profilename');
         this.uiElements.profileImage = $('#profilepicture');
+        this.uiElements.uploadButton = $('#upload-video-button');
 
         this.data.config = config;
 
         this.data.auth0Lock = new Auth0Lock(config.auth0.clientId, config.auth0.domain, {
             auth: {
-		responseType: 'id_token token',
+                responseType: 'id_token token',
                 params: {
-			scope: config.auth0.scope,
-			audience: config.auth0.audience,
-			redirectUrl: "",
-			responseType: "token"
+                    scope: config.auth0.scope,
+                    audience: config.auth0.audience,
+                    redirectUrl: "",
+                    responseType: "token"
                 }
             }
         }); // params set in config.js
@@ -47,9 +49,9 @@
         this.wireEvents();
     },
     retrieveProfileData: function (accessToken) {
-		
-		console.log("retrieveProfileData: ", accessToken);
-		
+
+        console.log("retrieveProfileData: ", accessToken);
+
         var that = this;
 
         console.log("retrieving profile");
@@ -64,22 +66,22 @@
     configureAuthenticatedRequests: function () {
         $.ajaxSetup({
             'beforeSend': function (xhr) {
-				
-				var token = localStorage.getItem('userToken');
-				console.log("sending request with token: " + token);
+                var token = localStorage.getItem('userToken');
+                console.log("sending request with token: " + token);
                 xhr.setRequestHeader('Authorization', 'Bearer ' + token);
             }
         });
     },
     showUserAuthenticationDetails: function (profile) {
 
-		console.log("showUserAuthenticationDetails: ", profile);
-		
+        console.log("showUserAuthenticationDetails: ", profile);
+
         var showAuthenticationElements = !!profile; //coerce into a boolean (!!1 evalutes to true, !!0 evalutes to false)
 
         if (showAuthenticationElements) {
             this.uiElements.profileNameLabel.text(profile.nickname);
             this.uiElements.profileImage.attr('src', profile.picture);
+            this.uiElements.uploadButton.css('display', 'inline-block');
         }
         this.uiElements.loginButton.toggle(!showAuthenticationElements);
         this.uiElements.logoutButton.toggle(showAuthenticationElements);
@@ -99,6 +101,7 @@
 
             that.uiElements.logoutButton.hide();
             that.uiElements.profileButton.hide();
+            that.uiElements.uploadButton.hide();
             that.uiElements.loginButton.show();
         });
         this.uiElements.profileButton.click(function (e) {

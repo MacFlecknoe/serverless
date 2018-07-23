@@ -1,7 +1,8 @@
 (function () {
-    $(document).ready(function() {
-        userController.init(configConstants);
+    $(document).ready(function () {
         videoController.init(configConstants);
         uploadController.init(configConstants);
+        userController.init(configConstants, [videoController, uploadController]);
     });
 }());
+ 

@@ -11,7 +11,6 @@ var videoController = {
         this.uiElements.videoCardTemplate = $('#video-template');
         this.uiElements.videoList = $('#video-list');
         this.data.config = config;
-        this.getVideoList();
     },
     getVideoList: function () {
         var that = this;
@@ -19,6 +18,9 @@ var videoController = {
         $.get(url, function (data, status) {
             that.updateVideoFrontPage(data);
         });
+    },
+    removeVideoList: function () {
+        $(".video-file").remove();
     },
     updateVideoFrontPage: function (data) {
         var baseUrl = data.domain;
@@ -28,7 +30,14 @@ var videoController = {
             var clone = this.uiElements.videoCardTemplate.clone().attr('id', 'video-' + i);
             clone.show();
             clone.find('source').attr('src', video.filename);
+            clone.attr('class', 'row video-file');
             this.uiElements.videoList.prepend(clone);
         }
+    },
+    onLogin: function () {
+        this.getVideoList();
+    },
+    onLogout: function () {
+        this.removeVideoList();
     }
 }

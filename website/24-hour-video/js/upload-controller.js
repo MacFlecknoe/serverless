@@ -26,9 +26,6 @@ var uploadController = {
         this.uiElements.uploadButtonController.hide();
         this.uiElements.uploadProgressBar.show();
         this.uiElements.uploadProgressBar.find('.progress-bar').css('width', 0);
-
-        console.log("data:", JSON.stringify(data.encoded_policy));
-
         var fd = new FormData();
         fd.append('key', data.key);
         fd.append('acl', 'private');
@@ -65,5 +62,11 @@ var uploadController = {
             $('#upload-progress').find('.progress-bar').css('width', percentage + '%');
         }
         return xhr;
+    },
+    onLogin: function () {
+        this.uiElements.uploadButtonController.css('display', 'inline-block');
+    },
+    onLogout: function () {
+        this.uiElements.uploadButtonController.hide();
     }
 }

@@ -21,7 +21,7 @@ if (process.env.AWS_LAMBDA_FUNCTION_NAME === undefined) {
 }
 
 function createBucketParams(next) {
-   console.log("createBucketParams");
+    console.log("createBucketParams");
     logger.log('info','createBucketParams');
     var params = {
         Bucket: process.env.BUCKET,

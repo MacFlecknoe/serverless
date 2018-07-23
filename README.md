@@ -2,4 +2,4 @@
 
 sample code to experiment with lamdba and node.js deployments.
 
-includes openid and aws api-gatway integrations
+includes openid connect and aws api-gatway integrations. implementation also includes a custom authorizer which valdates openid connect tokens using a public key cert.

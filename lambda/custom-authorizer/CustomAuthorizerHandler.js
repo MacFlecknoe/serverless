@@ -3,7 +3,17 @@
 var AWS = require('aws-sdk');
 var jwt = require('jsonwebtoken');
 var request = require('request');
+var winston = require('winston');
 
+var logger = new (winston.Logger)({
+    transports: [
+        new (winston.transports.Console)({
+            handleExceptions: false,
+            json: false,
+            level: process.env.NODE_LOGGING_LEVEL || 'info'
+        })
+    ]
+});
 var generatePolicy = function (principalId, effect, resource) {
 
     var authResponse = {};
@@ -30,7 +40,7 @@ var authorizeMethod = function (token, secretOrPublicKey, verifyOptions, methodA
 
     jwt.verify(token, secretOrPublicKey, verifyOptions, function (err, decoded) {
         if (err) {
-            console.log('Failed jwt validation: ', err, 'token: ', token);
+            logger.info('Failed jwt validation: ', err, 'token: ', token);
             callback('Authorization Failed');
         } else {
             callback(null, generatePolicy('user', 'allow', methodArn));
@@ -40,10 +50,6 @@ var authorizeMethod = function (token, secretOrPublicKey, verifyOptions, methodA
 
 exports.handler = function (event, context, callback) {
 
-    console.log('Auth token: ' + event.authorizationToken);
-    console.log('Method ARN: ' + event.methodArn);
-    console.log('Context', context);
-
     if (!event.authorizationToken) {
         callback('Could not find authToken');
         return;
@@ -52,7 +58,7 @@ exports.handler = function (event, context, callback) {
 
     if (!process.env.CLIENT_SECRET) {
 
-        console.log("grabbing public key from s3");
+        logger.info("grabbing public key from s3");
 
         var s3 = new AWS.S3();
         var params = {
@@ -61,7 +67,7 @@ exports.handler = function (event, context, callback) {
         };
         s3.getObject(params, function (err, data) {
             if (err) {
-                console.log(err, err.stack);
+                logger.warn(err, err.stack);
                 callback(err);
             } else {
                 authorizeMethod(token, new Buffer(data.Body, 'binary'), { algorithm: 'RS256' }, event.methodArn, callback);
@@ -69,7 +75,7 @@ exports.handler = function (event, context, callback) {
         });
 
     } else {
-        console.log("using client secret");
+        logger.info("using client secret");
         authorizeMethod(token, process.env.CLIENT_SECRET, { algorithm: 'HS256' }, event.methodArn, callback);
     }
 };

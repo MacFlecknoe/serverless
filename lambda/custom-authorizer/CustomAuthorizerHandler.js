@@ -37,12 +37,13 @@ var generatePolicy = function (principalId, effect, resource) {
 };
 
 var authorizeMethod = function (token, secretOrPublicKey, verifyOptions, methodArn, callback) {
-
+    logger.debug(jwt.decode(token));
     jwt.verify(token, secretOrPublicKey, verifyOptions, function (err, decoded) {
         if (err) {
             logger.info('Failed jwt validation: ', err, 'token: ', token);
             callback('Authorization Failed');
         } else {
+            
             callback(null, generatePolicy('user', 'allow', methodArn));
         }
     });

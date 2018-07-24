@@ -1,36 +1,3 @@
 {
-	"Records": [{
-			"eventVersion": "2.0",
-			"eventSource": "aws:s3",
-			"awsRegion": "us-east-1",
-			"eventTime": "2016-12-11T00:00:00.000Z",
-			"eventName": "ObjectCreated:Put",
-			"userIdentity": {
-				"principleId": "A3MCB9FEJCFJSY"
-			},
-			"requestParameters": {
-				"sourceIPAddress": "127.0.0.1"
-			},
-			"responseElements": {
-				"x-amz-request-id": "3966C864F562A6A0",
-				"x-amz-id-2": "2radsa8X4nKpba7KbgVurmc7rwe/"
-			},
-			"s3": {
-				"s3SchemaVersion": "1.0",
-				"configurationId": "Video Upload",
-        "bucket": {
-          "name": "michael-lambert-va-serverless-video-upload",
-          "ownerIdentity": {
-            "principleId": "A3MCB9FEJCFJSY"
-          },
-          "arn": "arn:aws:s3:::serverless-video-upload"
-        },
-				"object": {
-					"key": "my video m4",
-					"size": 2236480,
-					"eTag": "ddb7a52094d2079a27ac44f83ca669e9",
-					"sequencer": "005686091F4FFF1565"
-				}
-			}
-	}]
+  "authorizationToken": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IlEwRTNPRGd5UXpZNE5UazRRMFJCTmpNM1FrRXpSak01TVRRMk16UkdNVFV4UkVaRU9ETTVNdyJ9.eyJpc3MiOiJodHRwczovL21pY2hhZWxsYW1iZXJ0LmF1dGgwLmNvbS8iLCJzdWIiOiJhdXRoMHw1YjQyYmNlMDlhYTlhZTA2ZTg4Y2MwZTciLCJhdWQiOlsiaHR0cHM6Ly9taWNoYWVsbGFtYmVydC5hdXRoMC5jb20vYXBpL3YyLyIsImh0dHBzOi8vbWljaGFlbGxhbWJlcnQuYXV0aDAuY29tL3VzZXJpbmZvIl0sImlhdCI6MTUzMTcwNDcyOCwiZXhwIjoxNTMxNzExOTI4LCJhenAiOiJDdGlMdlE0SDdjSEc3WlVJcTlxSVppN1dMeEtZcmhNdiIsInNjb3BlIjoib3BlbmlkIHByb2ZpbGUgZW1haWwifQ.IotenPPsfukxISfD97bTZP18gt-BEi8RIuBpKpSPG6Evn6lBE0CHlvjpy2ZLVhimvPEvJl6ltsG9ghRYVNqVchRbnH0w38QocS-ArWuKqs-M5OCTlLJo7lLYYsOd1nwdXsIGpz4PDyRuVmhG5a9qqlWZsS8rJK4UQ95oCcZKByr2zpO784wmEOMwqP6IB2jl940KAxilbKS1FKzrh_6joeFph36Y3Dz_EJQg-M9g7AlqHnhIpVPNJkfuuTlR3UthJn4iBIgDQUBSqelrLEEutpFgtvNJdwl1rhZaubkQq1W8hoYfAP3mKSf59uX2IsrRrf45R1U4zZy2MI7RAW5NYQ"
 }
